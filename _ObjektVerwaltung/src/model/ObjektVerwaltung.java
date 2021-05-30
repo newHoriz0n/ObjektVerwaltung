@@ -35,9 +35,8 @@ public class ObjektVerwaltung {
 
 	private OV_View v;
 
-	public ObjektVerwaltung() {
-		this.b = new Betrachter();
-		b.setPosition(50000, 50000);
+	public ObjektVerwaltung(Betrachter b) {
+		this.b = b;
 		loadKreise();
 
 		CalcRelevanzThread crt = new CalcRelevanzThread();

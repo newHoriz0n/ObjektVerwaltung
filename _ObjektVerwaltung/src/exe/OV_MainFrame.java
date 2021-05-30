@@ -11,9 +11,7 @@ public class OV_MainFrame extends JFrame  {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public OV_MainFrame() {
-		ObjektVerwaltung ov = new ObjektVerwaltung();
-		
+	public OV_MainFrame(ObjektVerwaltung ov) {
 		OV_View v = new OV_View(ov);
 		add(v);
 		
@@ -21,10 +19,6 @@ public class OV_MainFrame extends JFrame  {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
-	
-	public static void main(String [] args) {
-		OV_MainFrame mf = new OV_MainFrame();
-		mf.requestFocus();
-	}
+
 	
 }
