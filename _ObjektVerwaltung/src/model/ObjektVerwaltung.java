@@ -34,6 +34,8 @@ public class ObjektVerwaltung {
 	private Betrachter b;
 
 	private OV_View v;
+	
+	private long lastUpdate;
 
 	public ObjektVerwaltung(Betrachter b) {
 		this.b = b;
@@ -55,10 +57,12 @@ public class ObjektVerwaltung {
 	}
 
 	public void updateOV() {
-		b.update();
 		if (v != null) {
 			v.updateUI();
 		}
+		long dt = System.nanoTime() - lastUpdate;
+		b.update(dt);
+		lastUpdate = System.nanoTime();
 	}
 
 	public void setView(OV_View v) {
@@ -83,7 +87,7 @@ public class ObjektVerwaltung {
 		entferntSichtbareKreiseTemp.clear();
 		direktSichtbareKreiseTemp.clear();
 
-		double metereologischeSichtweite = 1000;
+		double metereologischeSichtweite = 1200;
 
 		// Bestimme Relevanz aller Kreise
 		for (Kreis k : kreise) {
@@ -162,9 +166,6 @@ public class ObjektVerwaltung {
 				k.draw(g, b, screenRadius);
 			}
 
-			// Betrachter
-			b.draw(g);
-
 		}
 
 		System.out.println("Entfernte Kreise: " + entferntSichtbareKreise.size());
@@ -208,19 +209,20 @@ public class ObjektVerwaltung {
 	}
 
 	class CalcRelevanzThread extends Thread {
-		@Override
-		public void run() {
-			while (true) {
-				synchronized (addKreisLock) {
-					calcRelevanzen();
-				}
+		
+		public CalcRelevanzThread() {
+			Timer t = new Timer();
+			TimerTask tt = new TimerTask() {
 
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				@Override
+				public void run() {
+					synchronized (addKreisLock) {
+						calcRelevanzen();
+					}
 				}
-			}
+			};
+			t.scheduleAtFixedRate(tt, 0, 1000);
 		}
+		
 	}
 }

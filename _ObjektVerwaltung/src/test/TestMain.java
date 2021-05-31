@@ -23,7 +23,7 @@ public class TestMain {
 		long start = System.currentTimeMillis();
 
 		// Geniere Kreise
-		for (int i = 0; i < 10000000; i++) {
+		for (int i = 0; i < 1000000; i++) {
 			ov.addKreis(new Kreis(r.nextInt(700000), r.nextInt(700000), 5 + r.nextInt(100),
 					new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255))));
 		}

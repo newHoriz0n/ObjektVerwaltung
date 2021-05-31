@@ -5,8 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 
 import javax.swing.JPanel;
 
@@ -23,54 +23,43 @@ public class OV_View extends JPanel {
 
 	public OV_View(ObjektVerwaltung ov) {
 		this.ov = ov;
-		
+
 		ov.setView(this);
-		
+
 		addMouseWheelListener(new MouseWheelListener() {
-			
+
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				ov.changeSichtaufloesung(e.getPreciseWheelRotation());
 			}
 		});
-		
-//		PaintThread pt = new PaintThread();
-//		pt.start();
-		
+
 	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		
+		super.paintComponent(g);
+
 		Graphics2D g2d = (Graphics2D) g;
 
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 		
-		g2d.translate(getWidth() / 2 - ov.getBetrachter().getX(), getHeight() / 2 - ov.getBetrachter().getY());
+		AffineTransform at = new AffineTransform();
+		at.translate(getWidth() / 2 - ov.getBetrachter().getX(), getHeight() / 2 - ov.getBetrachter().getY());
+		g2d.transform(at);
 		
 		ov.draw(g2d);
 
-		g2d.translate(getWidth() / 2 + ov.getBetrachter().getX(), getHeight() / 2 + ov.getBetrachter().getY());
-		
-	}
-	
-	class PaintThread extends Thread {
-		
-		public PaintThread () {
-			
-			Timer t = new Timer();
-			TimerTask tt  = new TimerTask() {
-				
-				@Override
-				public void run() {
-					updateUI();
-				}
-			};
-			t.scheduleAtFixedRate(tt, 0, 30);
-			
+		try {
+			at.invert();
+		} catch (NoninvertibleTransformException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		g2d.transform(at);
 		
-	}
+		ov.getBetrachter().drawFixed(g2d, getWidth() / 2, getHeight() / 2);
 
+	}
 }

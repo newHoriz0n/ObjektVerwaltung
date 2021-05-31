@@ -16,7 +16,7 @@ public class TestBetrachter implements Betrachter, KeyHandler {
 	private boolean hoch;
 	private boolean runter;
 
-	private double size;
+	private int size;
 
 	public TestBetrachter(double x, double y) {
 		this.x = x;
@@ -25,11 +25,14 @@ public class TestBetrachter implements Betrachter, KeyHandler {
 	}
 
 	@Override
-	public void update() {
+	public void update(long dt) {
+
+		double s = (double)dt / (double)1000000000;
+		
 		if (links) {
 			x--;
 		} else if (hoch) {
-			y--;
+			y -= 100 * s;
 		} else if (rechts) {
 			x++;
 		} else if (runter) {
@@ -65,6 +68,12 @@ public class TestBetrachter implements Betrachter, KeyHandler {
 	public void draw(Graphics2D g) {
 		g.setColor(Color.ORANGE);
 		g.fillOval((int) (x - size), (int) (y - size), (int) (2 * size), (int) (2 * size));
+	}
+
+	@Override
+	public void drawFixed(Graphics2D g, int posX, int posY) {
+		g.setColor(Color.ORANGE);
+		g.fillOval((int) (posX - size), (int) (posY - size), (int) (2 * size), (int) (2 * size));
 	}
 
 }
