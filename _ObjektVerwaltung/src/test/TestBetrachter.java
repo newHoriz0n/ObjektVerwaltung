@@ -1,5 +1,8 @@
 package test;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import ctrl.KeyHandler;
 import model.Betrachter;
 
@@ -7,15 +10,18 @@ public class TestBetrachter implements Betrachter, KeyHandler {
 
 	private double x;
 	private double y;
-	
+
 	private boolean links;
 	private boolean rechts;
 	private boolean hoch;
 	private boolean runter;
 
+	private double size;
+
 	public TestBetrachter(double x, double y) {
 		this.x = x;
 		this.y = y;
+		this.size = 20;
 	}
 
 	@Override
@@ -53,6 +59,12 @@ public class TestBetrachter implements Betrachter, KeyHandler {
 		hoch = keys[38];
 		rechts = keys[39];
 		runter = keys[40];
+	}
+
+	@Override
+	public void draw(Graphics2D g) {
+		g.setColor(Color.ORANGE);
+		g.fillOval((int) (x - size), (int) (y - size), (int) (2 * size), (int) (2 * size));
 	}
 
 }

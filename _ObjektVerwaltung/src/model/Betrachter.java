@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.Graphics2D;
+
 public interface Betrachter {
 
 	public void update();
@@ -10,4 +12,5 @@ public interface Betrachter {
 
 	public double getY();
 
+	public void draw(Graphics2D g);
 }

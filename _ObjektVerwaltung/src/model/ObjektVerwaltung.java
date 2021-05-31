@@ -176,6 +176,9 @@ public class ObjektVerwaltung {
 			for (Kreis k : direktSichtbareKreise) {
 				k.draw(g, b, screenRadius);
 			}
+			
+			// Betrachter
+			b.draw(g);
 
 		}
 
