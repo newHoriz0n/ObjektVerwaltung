@@ -10,7 +10,6 @@ public class Kreis implements Comparable<Kreis> {
 	private double posY;
 
 	private Color echteFarbe;
-	private Color erscheinungsFarbe;
 
 	private double sichtbarkeit = 0; // [0,1]
 
@@ -67,7 +66,6 @@ public class Kreis implements Comparable<Kreis> {
 	}
 
 	public void draw(Graphics2D g, Betrachter b, double screenRadius) {
-		double r = calcErscheinungsGroesse(b, screenRadius);
 		if (randDistanz < screenRadius) {
 			g.setColor(echteFarbe);
 			g.fillOval((int) (posX - radius), (int) (posY - radius), (int) (radius * 2), (int) (radius * 2));

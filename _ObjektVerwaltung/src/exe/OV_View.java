@@ -34,8 +34,8 @@ public class OV_View extends JPanel {
 			}
 		});
 		
-		PaintThread pt = new PaintThread();
-		pt.start();
+//		PaintThread pt = new PaintThread();
+//		pt.start();
 		
 	}
 
