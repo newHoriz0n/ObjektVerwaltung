@@ -20,19 +20,13 @@ public class OV_View extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private ObjektVerwaltung ov;
+	
+	private double [] offset = new double [2];
 
 	public OV_View(ObjektVerwaltung ov) {
 		this.ov = ov;
 
 		ov.setView(this);
-
-		addMouseWheelListener(new MouseWheelListener() {
-
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				ov.changeSichtaufloesung(e.getPreciseWheelRotation());
-			}
-		});
 
 	}
 
@@ -45,8 +39,11 @@ public class OV_View extends JPanel {
 		g2d.setColor(Color.WHITE);
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 		
+		offset[0] = getWidth() / 2 - ov.getBetrachter().getX();
+		offset[1] = getHeight() / 2 - ov.getBetrachter().getY();
+		
 		AffineTransform at = new AffineTransform();
-		at.translate(getWidth() / 2 - ov.getBetrachter().getX(), getHeight() / 2 - ov.getBetrachter().getY());
+		at.translate(offset[0], offset[1]);
 		g2d.transform(at);
 		
 		ov.draw(g2d);
@@ -54,7 +51,6 @@ public class OV_View extends JPanel {
 		try {
 			at.invert();
 		} catch (NoninvertibleTransformException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		g2d.transform(at);
@@ -62,4 +58,9 @@ public class OV_View extends JPanel {
 		ov.getBetrachter().drawFixed(g2d, getWidth() / 2, getHeight() / 2);
 
 	}
+	
+	public double[] getOffset() {
+		return offset;
+	}
+	
 }

@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.util.Random;
 
 import ctrl.KeyHandler;
+import ctrl.MouseHandler;
 import ctrl.OV_Controller;
 import exe.OV_MainFrame;
+import exe.OV_View;
 import model.Betrachter;
 import model.Kreis;
 import model.ObjektVerwaltung;
@@ -35,10 +37,16 @@ public class TestMain {
 
 		OV_Controller tc = new OV_Controller();
 				
-		tc.addListener((KeyHandler) b);
+		tc.addKeyHandler((KeyHandler) b);
+		tc.addMouseHandler((MouseHandler) b);
 		
-		OV_MainFrame mf = new OV_MainFrame(ov);
+		OV_View v =  new OV_View(ov);
+		tc.setViewer(v);
+		v.addMouseListener(tc);
+		v.addMouseMotionListener(tc);
+		v.addMouseWheelListener(tc);
 		
+		OV_MainFrame mf = new OV_MainFrame(ov, v);
 		mf.addKeyListener(tc);
 		
 		mf.requestFocus();
