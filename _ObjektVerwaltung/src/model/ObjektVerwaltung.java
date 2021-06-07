@@ -34,7 +34,7 @@ public class ObjektVerwaltung {
 	private Betrachter b;
 
 	private OV_View v;
-	
+
 	private long lastUpdate;
 
 	public ObjektVerwaltung(Betrachter b) {
@@ -104,19 +104,22 @@ public class ObjektVerwaltung {
 			}
 
 		}
-		System.out.println("Calc Relevanz - Dauer: " + (System.currentTimeMillis() - start) + " (" + kreise.size() + ")");
+		// System.out.println("Calc Relevanz - Dauer: " + (System.currentTimeMillis() -
+		// start) + " (" + kreise.size() + ")");
 
 		long start_sort = System.currentTimeMillis();
 		Collections.sort(direktSichtbareKreiseTemp);
-		System.out.println("Calc Sort - Dauer: " + (System.currentTimeMillis() - start_sort) + " (" + direktSichtbareKreiseTemp.size() + ")");
+		// System.out.println("Calc Sort - Dauer: " + (System.currentTimeMillis() -
+		// start_sort) + " (" + direktSichtbareKreiseTemp.size() + ")");
 
 		// Calc Entferntsichtbare
 		long start_entfernsichtbar = System.currentTimeMillis();
 		Collections.sort(entferntRelevanteKreiseTemp); // nahe Kreise sind bei hohen Indizes
 		entferntSichtbareKreiseTemp.addAll(entferntRelevanteKreiseTemp);
 
-		System.out.println("Calc entferntsichtbare - Dauer: " + (System.currentTimeMillis() - start_entfernsichtbar) + " ("
-				+ entferntRelevanteKreiseTemp.size() + ")");
+		// System.out.println("Calc entferntsichtbare - Dauer: " +
+		// (System.currentTimeMillis() - start_entfernsichtbar) + " ("
+		// + entferntRelevanteKreiseTemp.size() + ")");
 
 		// Temps übertragen
 		synchronized (realLock) {
@@ -127,7 +130,8 @@ public class ObjektVerwaltung {
 			entferntSichtbareKreise.addAll(entferntSichtbareKreiseTemp);
 			entferntRelevanteKreise.clear();
 			entferntRelevanteKreise.addAll(entferntRelevanteKreiseTemp);
-			System.out.println("Calc Übertrag - Dauer: " + (System.currentTimeMillis() - start_uebertrag));
+			// System.out.println("Calc Übertrag - Dauer: " + (System.currentTimeMillis() -
+			// start_uebertrag));
 		}
 
 	}
@@ -146,7 +150,8 @@ public class ObjektVerwaltung {
 			double entferntleistenHoehe = 30;
 
 			// Schablone für runden Screen
-			Ellipse2D aussenloch = new Ellipse2D.Double(b.getX() - screenRadius, b.getY() - screenRadius, 2 * (screenRadius), 2 * (screenRadius));
+			Ellipse2D aussenloch = new Ellipse2D.Double(b.getX() - screenRadius, b.getY() - screenRadius,
+					2 * (screenRadius), 2 * (screenRadius));
 			g.setClip(aussenloch);
 
 			// die nächsten X Entfernten anzeigen:
@@ -158,8 +163,10 @@ public class ObjektVerwaltung {
 
 			// Hauptfeld clearen
 			g.setColor(Color.WHITE);
-			g.fillOval((int) (b.getX() - screenRadius + entferntleistenHoehe), (int) (b.getY() - screenRadius + entferntleistenHoehe),
-					(int) (2 * (screenRadius - entferntleistenHoehe)), (int) ((screenRadius - entferntleistenHoehe) * 2));
+			g.fillOval((int) (b.getX() - screenRadius + entferntleistenHoehe),
+					(int) (b.getY() - screenRadius + entferntleistenHoehe),
+					(int) (2 * (screenRadius - entferntleistenHoehe)),
+					(int) ((screenRadius - entferntleistenHoehe) * 2));
 
 			// Nahe Kreise
 			for (Kreis k : direktSichtbareKreise) {
@@ -168,9 +175,9 @@ public class ObjektVerwaltung {
 
 		}
 
-		System.out.println("Entfernte Kreise: " + entferntSichtbareKreise.size());
-		System.out.println("Nahe Kreise: " + direktSichtbareKreise.size());
-		System.out.println("Paint-Dauer: " + (System.currentTimeMillis() - start));
+	//	System.out.println("Entfernte Kreise: " + entferntSichtbareKreise.size());
+	//	System.out.println("Nahe Kreise: " + direktSichtbareKreise.size());
+	//	System.out.println("Paint-Dauer: " + (System.currentTimeMillis() - start));
 
 	}
 
@@ -209,7 +216,7 @@ public class ObjektVerwaltung {
 	}
 
 	class CalcRelevanzThread extends Thread {
-		
+
 		public CalcRelevanzThread() {
 			Timer t = new Timer();
 			TimerTask tt = new TimerTask() {
@@ -223,6 +230,6 @@ public class ObjektVerwaltung {
 			};
 			t.scheduleAtFixedRate(tt, 0, 1000);
 		}
-		
+
 	}
 }

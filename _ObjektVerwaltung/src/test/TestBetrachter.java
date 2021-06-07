@@ -32,16 +32,20 @@ public class TestBetrachter implements Betrachter, KeyHandler, MouseHandler {
 	@Override
 	public void update(long dt) {
 
-		double s = (double) dt / (double) 1000000000;
-
+		double s = (double) dt / (double) 1000000000 * 100.0;
+		
 		if (links) {
-			x--;
+			y -= s * Math.cos(ausrichtung);
+			x -= s * Math.sin(ausrichtung);
 		} else if (hoch) {
-			y -= 100 * s;
+			y -= s * Math.sin(ausrichtung);
+			x += s * Math.cos(ausrichtung);
 		} else if (rechts) {
-			x++;
+			y += s * Math.cos(ausrichtung);
+			x += s * Math.sin(ausrichtung);
 		} else if (runter) {
-			y++;
+			y += s * Math.sin(ausrichtung);
+			x -= s * Math.cos(ausrichtung);
 		}
 	}
 
