@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 public class Kreis implements Comparable<Kreis> {
 
@@ -9,18 +10,23 @@ public class Kreis implements Comparable<Kreis> {
 	private double posX;
 	private double posY;
 
-	private Color echteFarbe;
+//	private double ausrichtung;
+	
+	private Color farbeHintergrund;
+	private Color farbeRahmen;
+	private BufferedImage bild;
 
 	private double sichtbarkeit = 0; // [0,1]
 
 	private double centerDistanz = 0;
 	private double randDistanz = 0;
 
-	public Kreis(int x, int y, int rad, Color farbe) {
+	public Kreis(int x, int y, int rad, Color hintergrund, Color rahmen) {
 		this.posX = x;
 		this.posY = y;
 		this.radius = rad;
-		this.echteFarbe = farbe;
+		this.farbeHintergrund = hintergrund;
+		this.farbeRahmen = rahmen;
 	}
 
 	public int getRadius() {
@@ -33,6 +39,10 @@ public class Kreis implements Comparable<Kreis> {
 
 	public double getPosY() {
 		return posY;
+	}
+
+	public void setBild(BufferedImage img) {
+		this.bild = img;
 	}
 
 	/**
@@ -67,8 +77,14 @@ public class Kreis implements Comparable<Kreis> {
 
 	public void draw(Graphics2D g, Betrachter b, double screenRadius) {
 		if (randDistanz < screenRadius) {
-			g.setColor(echteFarbe);
+			g.setColor(farbeHintergrund);
 			g.fillOval((int) (posX - radius), (int) (posY - radius), (int) (radius * 2), (int) (radius * 2));
+			if (bild != null) {
+				g.drawImage(bild, (int) (posX - radius), (int) (posY - radius), (int) (2 * radius), (int) (2 * radius),
+						null);
+			}
+			g.setColor(farbeRahmen);
+			g.drawOval((int) (posX - radius), (int) (posY - radius), (int) (radius * 2), (int) (radius * 2));
 		}
 	}
 
@@ -76,21 +92,26 @@ public class Kreis implements Comparable<Kreis> {
 		double dx = posX - b.getX();
 		double dy = posY - b.getY();
 		double r = calcErscheinungsGroesse(b, screenRadius);
-		
-		if (centerDistanz > screenRadius - entferntleistenHoehe/2) {
 
-			g.setColor(echteFarbe);
-			
+		if (centerDistanz > screenRadius - entferntleistenHoehe / 2) {
+
+			g.setColor(farbeHintergrund);
 			g.fillOval((int) (b.getX() + dx * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r),
-					(int) (b.getY() + dy * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r), (int) (r * 2), (int) (r * 2));
+					(int) (b.getY() + dy * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r),
+					(int) (r * 2), (int) (r * 2));
 
-			double sFaktor = 1-  Math.max(0, Math.min(1, sichtbarkeit));
+			g.setColor(farbeRahmen);
+			g.drawOval((int) (b.getX() + dx * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r),
+					(int) (b.getY() + dy * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r),
+					(int) (r * 2), (int) (r * 2));
+
+			double sFaktor = 1 - Math.max(0, Math.min(1, sichtbarkeit));
+
 			// Nebel
-			g.setColor(
-					new Color(255, 255,255, (int) (255 * sFaktor)));
+			g.setColor(new Color(255, 255, 255, (int) (255 * sFaktor)));
 			g.fillOval((int) (b.getX() + dx * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r),
-					(int) (b.getY() + dy * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r), (int) (r * 2), (int) (r * 2));
-
+					(int) (b.getY() + dy * (screenRadius - entferntleistenHoehe / 2) / centerDistanz - r),
+					(int) (r * 2), (int) (r * 2));
 
 		}
 	}
