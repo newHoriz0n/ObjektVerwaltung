@@ -11,11 +11,12 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import ctrl.gui.Aktion;
 import ctrl.gui.Button;
 import ctrl.gui.ButtonRound;
 import ctrl.gui.OV_GUI_Controller;
 import exe.OV_View;
-import model.Kreis;
+import model.KreisObjekt;
 import model.ObjektVerwaltung;
 import model.listener.EUpdateTopic;
 import model.listener.UpdateListener;
@@ -32,8 +33,8 @@ public class OV_Controller
 	private long moveUpdateRate = 10;
 	private int[] aktRealMausPos;
 
-	private List<KeyHandler> keyHandler;
-	private List<MouseHandler> mouseLHandler;
+	private List<OV_KeyHandler> keyHandler;
+	private List<OV_MouseHandler> mouseLHandler;
 
 	// GUI Controller
 	private OV_GUI_Controller gc;
@@ -52,11 +53,11 @@ public class OV_Controller
 		this.v = v;
 	}
 
-	public void addKeyHandler(KeyHandler l) {
+	public void addKeyHandler(OV_KeyHandler l) {
 		this.keyHandler.add(l);
 	}
 
-	public void addMouseHandler(MouseHandler l) {
+	public void addMouseHandler(OV_MouseHandler l) {
 		this.mouseLHandler.add(l);
 	}
 
@@ -65,7 +66,7 @@ public class OV_Controller
 		if (tasten.length > e.getKeyCode()) {
 			tasten[e.getKeyCode()] = true;
 		}
-		for (KeyHandler k : keyHandler) {
+		for (OV_KeyHandler k : keyHandler) {
 			k.handleUpdate(tasten);
 		}
 	}
@@ -75,7 +76,7 @@ public class OV_Controller
 		if (tasten.length > e.getKeyCode()) {
 			tasten[e.getKeyCode()] = false;
 		}
-		for (KeyHandler k : keyHandler) {
+		for (OV_KeyHandler k : keyHandler) {
 			k.handleUpdate(tasten);
 		}
 	}
@@ -112,7 +113,7 @@ public class OV_Controller
 		if (System.currentTimeMillis() - lastMoveUpdate > moveUpdateRate) {
 			aktRealMausPos = getRealVonScreenKoords(e.getX(), e.getY());
 			lastMoveUpdate = System.currentTimeMillis();
-			for (MouseHandler m : mouseLHandler) {
+			for (OV_MouseHandler m : mouseLHandler) {
 				m.handleMouseUpdate(this, v);
 			}
 			gc.handleMouseMove(aktRealMausPos[0], aktRealMausPos[1]);
@@ -164,8 +165,15 @@ public class OV_Controller
 		if (topic.equals(EUpdateTopic.RELEVANZEN)) {
 
 			List<Button> bs = new ArrayList<>();
-			for (Kreis k : ov.getDirektSichtbareKreise()) {
+			for (KreisObjekt k : ov.getDirektSichtbareKreise()) {
 				ButtonRound b = new ButtonRound((int) k.getPosX(), (int) k.getPosY(), (int) k.getRadius());
+				b.setAktion(new Aktion() {
+					
+					@Override
+					public void run() {
+						k.handleEvent(EEventTyp.MAUSKLICK_LINKS);
+					}
+				});
 				bs.add(b);
 			}
 			gc.setCurrentButtons(bs);

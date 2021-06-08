@@ -4,15 +4,20 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
-public class Kreis implements Comparable<Kreis> {
+import ctrl.EEventTyp;
+import ctrl.OV_EventHandler;
+import ctrl.gui.Aktion;
+
+public class KreisObjekt implements Comparable<KreisObjekt>, OV_EventHandler {
 
 	private int radius;
 	private double posX;
 	private double posY;
 
 	private double ausrichtung;
-	
+
 	private Color farbeHintergrund;
 	private Color farbeRahmen;
 	private BufferedImage bild;
@@ -22,7 +27,9 @@ public class Kreis implements Comparable<Kreis> {
 	private double centerDistanz = 0;
 	private double randDistanz = 0;
 
-	public Kreis(int x, int y, int rad, Color hintergrund, Color rahmen) {
+	private HashMap<EEventTyp, Aktion> eventAktionen = new HashMap<>();
+
+	public KreisObjekt(int x, int y, int rad, Color hintergrund, Color rahmen) {
 		this.posX = x;
 		this.posY = y;
 		this.radius = rad;
@@ -49,7 +56,11 @@ public class Kreis implements Comparable<Kreis> {
 	public void setAusrichtung(double richtung) {
 		this.ausrichtung = richtung;
 	}
-	
+
+	public void setEventAktion(EEventTyp e, Aktion a) {
+		eventAktionen.put(e, a);
+	}
+
 	/**
 	 * 
 	 * @param b
@@ -62,20 +73,25 @@ public class Kreis implements Comparable<Kreis> {
 
 		// TODO: Berücksichtige Bewegungsgeschwindigkeit in screenRadius
 
-		calcDistanzZu(b.getX(), b.getY());
+		if (posX > b.getX() - metereologischeSichtweite && posX < b.getX() + metereologischeSichtweite
+				&& posY > b.getY() - metereologischeSichtweite && posY < b.getY() + metereologischeSichtweite) {
 
-		this.sichtbarkeit = 1 - ((randDistanz - screenRadius) / metereologischeSichtweite);
+			calcDistanzZu(b.getX(), b.getY());
 
-		if (sichtbarkeit > 0) {
-			if (calcSichtwinkelTan() > sichtAufloesung) {
-				if (randDistanz < screenRadius - 100) {
-					return 3;
-				} else if (randDistanz < screenRadius + 100) {
-					return 2;
+			this.sichtbarkeit = 1 - ((randDistanz - screenRadius) / metereologischeSichtweite);
+
+			if (sichtbarkeit > 0) {
+				if (calcSichtwinkelTan() > sichtAufloesung) {
+					if (randDistanz < screenRadius - 100) {
+						return 3;
+					} else if (randDistanz < screenRadius + 100) {
+						return 2;
+					}
+					return 1;
 				}
-				return 1;
 			}
 		}
+		
 		return 0;
 
 	}
@@ -88,7 +104,7 @@ public class Kreis implements Comparable<Kreis> {
 				AffineTransform at = new AffineTransform();
 				at.translate(posX - radius, posY - radius);
 				at.rotate(ausrichtung, radius, radius);
-				at.scale(radius * 2 / (double)bild.getWidth(), radius * 2 / (double)bild.getHeight());
+				at.scale(radius * 2 / (double) bild.getWidth(), radius * 2 / (double) bild.getHeight());
 				g.drawImage(bild, at, null);
 			}
 			g.setColor(farbeRahmen);
@@ -145,13 +161,24 @@ public class Kreis implements Comparable<Kreis> {
 	}
 
 	@Override
-	public int compareTo(Kreis o) {
+	public int compareTo(KreisObjekt o) {
 		if (randDistanz < o.randDistanz) {
 			return 1;
 		} else if (randDistanz > o.randDistanz) {
 			return -1;
 		} else {
 			return 0;
+		}
+	}
+
+	public double getAusrichtung() {
+		return ausrichtung;
+	}
+
+	@Override
+	public void handleEvent(EEventTyp e) {
+		if (eventAktionen.containsKey(e)) {
+			eventAktionen.get(e).run();
 		}
 	}
 

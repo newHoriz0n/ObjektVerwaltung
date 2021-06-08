@@ -3,13 +3,13 @@ package test;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import ctrl.KeyHandler;
-import ctrl.MouseHandler;
+import ctrl.OV_KeyHandler;
+import ctrl.OV_MouseHandler;
 import ctrl.OV_Controller;
 import exe.OV_View;
 import model.Betrachter;
 
-public class TestBetrachter implements Betrachter, KeyHandler, MouseHandler {
+public class TestBetrachter implements Betrachter, OV_KeyHandler, OV_MouseHandler {
 
 	private double x;
 	private double y;

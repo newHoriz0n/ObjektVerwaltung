@@ -8,13 +8,15 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import ctrl.KeyHandler;
-import ctrl.MouseHandler;
+import ctrl.OV_KeyHandler;
+import ctrl.OV_MouseHandler;
+import ctrl.gui.Aktion;
+import ctrl.EEventTyp;
 import ctrl.OV_Controller;
 import exe.OV_MainFrame;
 import exe.OV_View;
 import model.Betrachter;
-import model.Kreis;
+import model.KreisObjekt;
 import model.ObjektVerwaltung;
 import model.listener.EUpdateTopic;
 
@@ -39,12 +41,19 @@ public class TestMain {
 		}
 
 		for (int i = 0; i < 1000000; i++) {
-			Kreis k = new Kreis(r.nextInt(700000), r.nextInt(700000), 5 + r.nextInt(100),
+			KreisObjekt k = new KreisObjekt(r.nextInt(700000), r.nextInt(700000), 5 + r.nextInt(100),
 					new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255), 0),
 					new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
 
 			k.setBild(img);
 			k.setAusrichtung(r.nextDouble() * 2 * Math.PI);
+			k.setEventAktion(EEventTyp.MAUSKLICK_LINKS, new Aktion() {
+				
+				@Override
+				public void run() {
+					k.setAusrichtung(k.getAusrichtung() + 0.1);
+				}
+			});
 			
 			ov.addKreis(k);
 			
@@ -56,8 +65,8 @@ public class TestMain {
 		ov.calcRelevanzen();
 
 		OV_Controller tc = new OV_Controller(ov);
-		tc.addKeyHandler((KeyHandler) b);
-		tc.addMouseHandler((MouseHandler) b);
+		tc.addKeyHandler((OV_KeyHandler) b);
+		tc.addMouseHandler((OV_MouseHandler) b);
 
 		ov.addUpdateListener(EUpdateTopic.RELEVANZEN, tc);
 

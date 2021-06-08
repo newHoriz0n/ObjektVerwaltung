@@ -17,18 +17,18 @@ import model.listener.UpdateListener;
 
 public class ObjektVerwaltung {
 
-	private List<Kreis> kreise;
+	private List<KreisObjekt> kreise;
 
-	private List<Kreis> entferntRelevanteKreise;
-	private List<Kreis> entferntSichtbareKreise; // Entfernte, die nicht verdeckt sind
-	private List<Kreis> direktSichtbareKreise;
+	private List<KreisObjekt> entferntRelevanteKreise;
+	private List<KreisObjekt> entferntSichtbareKreise; // Entfernte, die nicht verdeckt sind
+	private List<KreisObjekt> direktSichtbareKreise;
 
 	// Temporäre Listen während Erstellung
 	private Object addKreisLock = new Object();
 	private Object realLock = new Object();
-	private List<Kreis> entferntRelevanteKreiseTemp;
-	private List<Kreis> entferntSichtbareKreiseTemp;
-	private List<Kreis> direktSichtbareKreiseTemp;
+	private List<KreisObjekt> entferntRelevanteKreiseTemp;
+	private List<KreisObjekt> entferntSichtbareKreiseTemp;
+	private List<KreisObjekt> direktSichtbareKreiseTemp;
 
 	private double sichtAufloesung = 0.01;
 
@@ -80,7 +80,7 @@ public class ObjektVerwaltung {
 		return b;
 	}
 
-	public void addKreis(Kreis k) {
+	public void addKreis(KreisObjekt k) {
 		synchronized (addKreisLock) {
 			kreise.add(k);
 		}
@@ -88,7 +88,7 @@ public class ObjektVerwaltung {
 
 	public void calcRelevanzen() {
 
-		// long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 
 		entferntRelevanteKreiseTemp.clear();
 		entferntSichtbareKreiseTemp.clear();
@@ -97,7 +97,7 @@ public class ObjektVerwaltung {
 		double metereologischeSichtweite = 1200;
 
 		// Bestimme Relevanz aller Kreise
-		for (Kreis k : kreise) {
+		for (KreisObjekt k : kreise) {
 
 			int relevanz = k.calcRelevanz(b, metereologischeSichtweite, sichtAufloesung, screenRadius);
 
@@ -111,8 +111,8 @@ public class ObjektVerwaltung {
 			}
 
 		}
-		// System.out.println("Calc Relevanz - Dauer: " + (System.currentTimeMillis() -
-		// start) + " (" + kreise.size() + ")");
+		System.out
+				.println("Calc Relevanz - Dauer: " + (System.currentTimeMillis() - start) + " (" + kreise.size() + ")");
 
 		// long start_sort = System.currentTimeMillis();
 		Collections.sort(direktSichtbareKreiseTemp);
@@ -185,7 +185,7 @@ public class ObjektVerwaltung {
 					(int) ((screenRadius - entferntleistenHoehe) * 2));
 
 			// Nahe Kreise
-			for (Kreis k : direktSichtbareKreise) {
+			for (KreisObjekt k : direktSichtbareKreise) {
 				k.draw(g, b, screenRadius);
 			}
 
@@ -258,7 +258,7 @@ public class ObjektVerwaltung {
 		}
 	}
 
-	public List<Kreis> getDirektSichtbareKreise() {
+	public List<KreisObjekt> getDirektSichtbareKreise() {
 		return direktSichtbareKreise;
 	}
 }
