@@ -3,13 +3,12 @@ package exe;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 
 import javax.swing.JPanel;
 
+import ctrl.OV_Controller;
 import model.ObjektVerwaltung;
 
 public class OV_View extends JPanel {
@@ -20,12 +19,14 @@ public class OV_View extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private ObjektVerwaltung ov;
+	private OV_Controller oc;
 	
 	private double [] offset = new double [2];
 
-	public OV_View(ObjektVerwaltung ov) {
+	public OV_View(ObjektVerwaltung ov, OV_Controller oc) {
 		this.ov = ov;
-
+		this.oc = oc;
+		
 		ov.setView(this);
 
 	}
@@ -47,6 +48,7 @@ public class OV_View extends JPanel {
 		g2d.transform(at);
 		
 		ov.draw(g2d);
+		oc.draw(g2d);
 
 		try {
 			at.invert();

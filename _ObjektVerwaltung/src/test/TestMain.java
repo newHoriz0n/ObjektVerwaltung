@@ -11,6 +11,7 @@ import exe.OV_View;
 import model.Betrachter;
 import model.Kreis;
 import model.ObjektVerwaltung;
+import model.listener.EUpdateTopic;
 
 public class TestMain {
 
@@ -24,7 +25,7 @@ public class TestMain {
 
 		long start = System.currentTimeMillis();
 
-		// Geniere Kreise
+		// Generiere Kreise
 		for (int i = 0; i < 1000000; i++) {
 			ov.addKreis(new Kreis(r.nextInt(700000), r.nextInt(700000), 5 + r.nextInt(100),
 					new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255))));
@@ -34,13 +35,14 @@ public class TestMain {
 
 		// Berechne Relevante
 		ov.calcRelevanzen();
-
-		OV_Controller tc = new OV_Controller();
-				
+		
+		OV_Controller tc = new OV_Controller(ov);
 		tc.addKeyHandler((KeyHandler) b);
 		tc.addMouseHandler((MouseHandler) b);
 		
-		OV_View v =  new OV_View(ov);
+		ov.addUpdateListener(EUpdateTopic.RELEVANZEN, tc);
+		
+		OV_View v =  new OV_View(ov, tc);
 		tc.setViewer(v);
 		v.addMouseListener(tc);
 		v.addMouseMotionListener(tc);

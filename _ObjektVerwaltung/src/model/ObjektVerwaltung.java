@@ -6,11 +6,14 @@ import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import exe.OV_View;
+import model.listener.EUpdateTopic;
+import model.listener.UpdateListener;
 
 public class ObjektVerwaltung {
 
@@ -37,6 +40,8 @@ public class ObjektVerwaltung {
 
 	private long lastUpdate;
 
+	private HashMap<EUpdateTopic, List<UpdateListener>> listeners;
+
 	public ObjektVerwaltung(Betrachter b) {
 		this.b = b;
 
@@ -47,6 +52,8 @@ public class ObjektVerwaltung {
 		this.entferntRelevanteKreiseTemp = new ArrayList<>();
 		this.entferntSichtbareKreiseTemp = new ArrayList<>();
 		this.direktSichtbareKreiseTemp = new ArrayList<>();
+
+		this.listeners = new HashMap<>();
 
 		CalcRelevanzThread crt = new CalcRelevanzThread();
 		crt.start();
@@ -81,7 +88,7 @@ public class ObjektVerwaltung {
 
 	public void calcRelevanzen() {
 
-		long start = System.currentTimeMillis();
+		// long start = System.currentTimeMillis();
 
 		entferntRelevanteKreiseTemp.clear();
 		entferntSichtbareKreiseTemp.clear();
@@ -107,13 +114,13 @@ public class ObjektVerwaltung {
 		// System.out.println("Calc Relevanz - Dauer: " + (System.currentTimeMillis() -
 		// start) + " (" + kreise.size() + ")");
 
-		long start_sort = System.currentTimeMillis();
+		// long start_sort = System.currentTimeMillis();
 		Collections.sort(direktSichtbareKreiseTemp);
 		// System.out.println("Calc Sort - Dauer: " + (System.currentTimeMillis() -
 		// start_sort) + " (" + direktSichtbareKreiseTemp.size() + ")");
 
 		// Calc Entferntsichtbare
-		long start_entfernsichtbar = System.currentTimeMillis();
+		// long start_entfernsichtbar = System.currentTimeMillis();
 		Collections.sort(entferntRelevanteKreiseTemp); // nahe Kreise sind bei hohen Indizes
 		entferntSichtbareKreiseTemp.addAll(entferntRelevanteKreiseTemp);
 
@@ -123,15 +130,24 @@ public class ObjektVerwaltung {
 
 		// Temps übertragen
 		synchronized (realLock) {
-			long start_uebertrag = System.currentTimeMillis();
+			// long start_uebertrag = System.currentTimeMillis();
 			direktSichtbareKreise.clear();
 			direktSichtbareKreise.addAll(direktSichtbareKreiseTemp);
 			entferntSichtbareKreise.clear();
 			entferntSichtbareKreise.addAll(entferntSichtbareKreiseTemp);
 			entferntRelevanteKreise.clear();
 			entferntRelevanteKreise.addAll(entferntRelevanteKreiseTemp);
+
 			// System.out.println("Calc Übertrag - Dauer: " + (System.currentTimeMillis() -
 			// start_uebertrag));
+		}
+
+		if (listeners != null) {
+			if (listeners.containsKey(EUpdateTopic.RELEVANZEN)) {
+				for (UpdateListener ul : listeners.get(EUpdateTopic.RELEVANZEN)) {
+					ul.handleOVUpdate(EUpdateTopic.RELEVANZEN);
+				}
+			}
 		}
 
 	}
@@ -141,7 +157,7 @@ public class ObjektVerwaltung {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_SPEED);
 
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 
 		// Entfernte Kreise
 
@@ -175,9 +191,9 @@ public class ObjektVerwaltung {
 
 		}
 
-	//	System.out.println("Entfernte Kreise: " + entferntSichtbareKreise.size());
-	//	System.out.println("Nahe Kreise: " + direktSichtbareKreise.size());
-	//	System.out.println("Paint-Dauer: " + (System.currentTimeMillis() - start));
+		// System.out.println("Entfernte Kreise: " + entferntSichtbareKreise.size());
+		// System.out.println("Nahe Kreise: " + direktSichtbareKreise.size());
+		// System.out.println("Paint-Dauer: " + (System.currentTimeMillis() - start));
 
 	}
 
@@ -231,5 +247,18 @@ public class ObjektVerwaltung {
 			t.scheduleAtFixedRate(tt, 0, 1000);
 		}
 
+	}
+
+	public void addUpdateListener(EUpdateTopic topic, UpdateListener ul) {
+		if (listeners != null) {
+			if (!listeners.containsKey(topic)) {
+				listeners.put(topic, new ArrayList<>());
+			}
+			listeners.get(topic).add(ul);
+		}
+	}
+
+	public List<Kreis> getDirektSichtbareKreise() {
+		return direktSichtbareKreise;
 	}
 }

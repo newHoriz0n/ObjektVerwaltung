@@ -1,5 +1,6 @@
 package ctrl;
 
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -10,10 +11,19 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import ctrl.gui.Button;
+import ctrl.gui.ButtonRound;
+import ctrl.gui.OV_GUI_Controller;
 import exe.OV_View;
+import model.Kreis;
+import model.ObjektVerwaltung;
+import model.listener.EUpdateTopic;
+import model.listener.UpdateListener;
 
-public class OV_Controller implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class OV_Controller
+		implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, UpdateListener {
 
+	private ObjektVerwaltung ov;
 	private OV_View v;
 
 	private boolean[] tasten = new boolean[256];
@@ -25,10 +35,17 @@ public class OV_Controller implements KeyListener, MouseListener, MouseMotionLis
 	private List<KeyHandler> keyHandler;
 	private List<MouseHandler> mouseLHandler;
 
-	public OV_Controller() {
+	// GUI Controller
+	private OV_GUI_Controller gc;
+
+	public OV_Controller(ObjektVerwaltung ov) {
+		this.ov = ov;
 		this.keyHandler = new ArrayList<>();
 		this.mouseLHandler = new ArrayList<>();
 		this.aktRealMausPos = new int[2];
+
+		this.gc = new OV_GUI_Controller();
+
 	}
 
 	public void setViewer(OV_View v) {
@@ -81,10 +98,11 @@ public class OV_Controller implements KeyListener, MouseListener, MouseMotionLis
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+
 		if (System.currentTimeMillis() - lastMoveUpdate > moveUpdateRate) {
 			aktRealMausPos = getRealVonScreenKoords(e.getX(), e.getY());
 			lastMoveUpdate = System.currentTimeMillis();
+			gc.handleMouseMove(aktRealMausPos[0], aktRealMausPos[1]);
 		}
 
 	}
@@ -97,6 +115,7 @@ public class OV_Controller implements KeyListener, MouseListener, MouseMotionLis
 			for (MouseHandler m : mouseLHandler) {
 				m.handleMouseUpdate(this, v);
 			}
+			gc.handleMouseMove(aktRealMausPos[0], aktRealMausPos[1]);
 		}
 	}
 
@@ -120,14 +139,12 @@ public class OV_Controller implements KeyListener, MouseListener, MouseMotionLis
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		gc.handleMousePress(aktRealMausPos[0], aktRealMausPos[1]);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		gc.handleMouseRelease(aktRealMausPos[0], aktRealMausPos[1]);
 	}
 
 	public int[] getRealVonScreenKoords(int screenX, int screenY) {
@@ -140,6 +157,23 @@ public class OV_Controller implements KeyListener, MouseListener, MouseMotionLis
 
 	public int[] getAktRealMausPos() {
 		return aktRealMausPos;
+	}
+
+	@Override
+	public void handleOVUpdate(EUpdateTopic topic) {
+		if (topic.equals(EUpdateTopic.RELEVANZEN)) {
+
+			List<Button> bs = new ArrayList<>();
+			for (Kreis k : ov.getDirektSichtbareKreise()) {
+				ButtonRound b = new ButtonRound((int) k.getPosX(), (int) k.getPosY(), (int) k.getRadius());
+				bs.add(b);
+			}
+			gc.setCurrentButtons(bs);
+		}
+	}
+
+	public void draw(Graphics2D g2d) {
+		gc.drawGUIController(g2d);
 	}
 
 }
