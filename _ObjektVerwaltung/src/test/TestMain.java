@@ -44,7 +44,8 @@ public class TestMain {
 					new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
 
 			k.setBild(img);
-
+			k.setAusrichtung(r.nextDouble() * 2 * Math.PI);
+			
 			ov.addKreis(k);
 			
 		}

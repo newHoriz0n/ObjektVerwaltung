@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class Kreis implements Comparable<Kreis> {
@@ -10,7 +11,7 @@ public class Kreis implements Comparable<Kreis> {
 	private double posX;
 	private double posY;
 
-//	private double ausrichtung;
+	private double ausrichtung;
 	
 	private Color farbeHintergrund;
 	private Color farbeRahmen;
@@ -45,6 +46,10 @@ public class Kreis implements Comparable<Kreis> {
 		this.bild = img;
 	}
 
+	public void setAusrichtung(double richtung) {
+		this.ausrichtung = richtung;
+	}
+	
 	/**
 	 * 
 	 * @param b
@@ -80,8 +85,11 @@ public class Kreis implements Comparable<Kreis> {
 			g.setColor(farbeHintergrund);
 			g.fillOval((int) (posX - radius), (int) (posY - radius), (int) (radius * 2), (int) (radius * 2));
 			if (bild != null) {
-				g.drawImage(bild, (int) (posX - radius), (int) (posY - radius), (int) (2 * radius), (int) (2 * radius),
-						null);
+				AffineTransform at = new AffineTransform();
+				at.translate(posX - radius, posY - radius);
+				at.rotate(ausrichtung, radius, radius);
+				at.scale(radius * 2 / (double)bild.getWidth(), radius * 2 / (double)bild.getHeight());
+				g.drawImage(bild, at, null);
 			}
 			g.setColor(farbeRahmen);
 			g.drawOval((int) (posX - radius), (int) (posY - radius), (int) (radius * 2), (int) (radius * 2));
