@@ -6,8 +6,8 @@ import java.awt.Graphics2D;
 import ctrl.OV_KeyHandler;
 import ctrl.OV_MouseHandler;
 import ctrl.OV_Controller;
-import exe.OV_View;
 import model.Betrachter;
+import view.OV_View;
 
 public class TestBetrachter implements Betrachter, OV_KeyHandler, OV_MouseHandler {
 

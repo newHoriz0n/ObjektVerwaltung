@@ -3,6 +3,7 @@ package exe;
 import javax.swing.JFrame;
 
 import model.ObjektVerwaltung;
+import view.OV_View;
 
 public class OV_MainFrame extends JFrame  {
 

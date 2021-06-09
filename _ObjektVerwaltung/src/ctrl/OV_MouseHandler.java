@@ -1,6 +1,6 @@
 package ctrl;
 
-import exe.OV_View;
+import view.OV_View;
 
 public interface OV_MouseHandler {
 

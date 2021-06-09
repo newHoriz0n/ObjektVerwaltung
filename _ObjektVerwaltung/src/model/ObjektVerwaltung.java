@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import exe.OV_View;
 import model.listener.EUpdateTopic;
 import model.listener.UpdateListener;
+import view.OV_View;
 
 public class ObjektVerwaltung {
 

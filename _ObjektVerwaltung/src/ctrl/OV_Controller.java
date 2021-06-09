@@ -15,11 +15,11 @@ import ctrl.gui.Aktion;
 import ctrl.gui.Button;
 import ctrl.gui.ButtonRound;
 import ctrl.gui.OV_GUI_Controller;
-import exe.OV_View;
 import model.KreisObjekt;
 import model.ObjektVerwaltung;
 import model.listener.EUpdateTopic;
 import model.listener.UpdateListener;
+import view.OV_View;
 
 public class OV_Controller
 		implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, UpdateListener {

@@ -14,11 +14,11 @@ import ctrl.gui.Aktion;
 import ctrl.EEventTyp;
 import ctrl.OV_Controller;
 import exe.OV_MainFrame;
-import exe.OV_View;
 import model.Betrachter;
 import model.KreisObjekt;
 import model.ObjektVerwaltung;
 import model.listener.EUpdateTopic;
+import view.OV_View;
 
 public class TestMain {
 
