@@ -19,13 +19,13 @@ import model.KreisObjekt;
 import model.ObjektVerwaltung;
 import model.listener.EUpdateTopic;
 import model.listener.UpdateListener;
-import view.OV_View;
+import view.OV_ViewContainer;
 
 public class OV_Controller
 		implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, UpdateListener {
 
 	private ObjektVerwaltung ov;
-	private OV_View v;
+	private OV_ViewContainer v;
 
 	private boolean[] tasten = new boolean[256];
 
@@ -49,7 +49,7 @@ public class OV_Controller
 
 	}
 
-	public void setViewer(OV_View v) {
+	public void setViewer(OV_ViewContainer v) {
 		this.v = v;
 	}
 

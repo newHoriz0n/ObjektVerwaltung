@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import ctrl.OV_Controller;
 import model.ObjektVerwaltung;
 
-public class OV_View extends JPanel {
+public class OV_ViewContainer extends JPanel {
 
 	/**
 	 * 
@@ -23,7 +23,7 @@ public class OV_View extends JPanel {
 	
 	private double [] offset = new double [2];
 
-	public OV_View(ObjektVerwaltung ov, OV_Controller oc) {
+	public OV_ViewContainer(ObjektVerwaltung ov, OV_Controller oc) {
 		this.ov = ov;
 		this.oc = oc;
 		

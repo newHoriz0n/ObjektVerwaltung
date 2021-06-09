@@ -7,7 +7,7 @@ import ctrl.OV_KeyHandler;
 import ctrl.OV_MouseHandler;
 import ctrl.OV_Controller;
 import model.Betrachter;
-import view.OV_View;
+import view.OV_ViewContainer;
 
 public class TestBetrachter implements Betrachter, OV_KeyHandler, OV_MouseHandler {
 
@@ -90,7 +90,7 @@ public class TestBetrachter implements Betrachter, OV_KeyHandler, OV_MouseHandle
 	}
 
 	@Override
-	public void handleMouseUpdate(OV_Controller c, OV_View v) {
+	public void handleMouseUpdate(OV_Controller c, OV_ViewContainer v) {
 		calcAusrichtung(c.getAktRealMausPos());
 		drawFixed((Graphics2D) v.getGraphics(), v.getWidth() / 2, v.getHeight() / 2);
 	}

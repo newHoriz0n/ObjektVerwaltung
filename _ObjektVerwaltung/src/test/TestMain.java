@@ -18,7 +18,7 @@ import model.Betrachter;
 import model.KreisObjekt;
 import model.ObjektVerwaltung;
 import model.listener.EUpdateTopic;
-import view.OV_View;
+import view.OV_ViewContainer;
 
 public class TestMain {
 
@@ -77,7 +77,7 @@ public class TestMain {
 
 		ov.addUpdateListener(EUpdateTopic.RELEVANZEN, tc);
 
-		OV_View v = new OV_View(ov, tc);
+		OV_ViewContainer v = new OV_ViewContainer(ov, tc);
 		tc.setViewer(v);
 		v.addMouseListener(tc);
 		v.addMouseMotionListener(tc);

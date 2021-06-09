@@ -13,7 +13,7 @@ import java.util.TimerTask;
 
 import model.listener.EUpdateTopic;
 import model.listener.UpdateListener;
-import view.OV_View;
+import view.OV_ViewContainer;
 
 public class ObjektVerwaltung {
 
@@ -36,7 +36,7 @@ public class ObjektVerwaltung {
 
 	private Betrachter b;
 
-	private OV_View v;
+	private OV_ViewContainer v;
 
 	private long lastUpdate;
 
@@ -72,7 +72,7 @@ public class ObjektVerwaltung {
 		lastUpdate = System.nanoTime();
 	}
 
-	public void setView(OV_View v) {
+	public void setView(OV_ViewContainer v) {
 		this.v = v;
 	}
 

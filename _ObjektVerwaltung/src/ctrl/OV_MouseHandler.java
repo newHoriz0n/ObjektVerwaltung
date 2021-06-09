@@ -1,8 +1,8 @@
 package ctrl;
 
-import view.OV_View;
+import view.OV_ViewContainer;
 
 public interface OV_MouseHandler {
 
-	public void handleMouseUpdate(OV_Controller c, OV_View v);
+	public void handleMouseUpdate(OV_Controller c, OV_ViewContainer v);
 }
