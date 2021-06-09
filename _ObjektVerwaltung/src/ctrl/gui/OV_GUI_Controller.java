@@ -33,15 +33,15 @@ public class OV_GUI_Controller {
 		}
 	}
 
-	public void handleMousePress(int x, int y) {
+	public void handleMousePress(int x, int y, int button) {
 		for (Button b : buttons) {
-			b.handleMousePress(x, y);
+			b.handleMousePress(x, y, button);
 		}
 	}
 
-	public void handleMouseRelease(int x, int y) {
+	public void handleMouseRelease(int x, int y, int button) {
 		for (Button b : buttons) {
-			b.handleMouseRelease(x, y);
+			b.handleMouseRelease(x, y, button);
 		}
 	}
 

@@ -25,8 +25,12 @@ public class ButtonRound extends Button {
 		if (mouseOver) {
 			g.setColor(Color.ORANGE);
 			g.drawOval(posX - radius, posY - radius, 2 * radius, 2 * radius);
-			if (mouseHold) {
+			if (mouseHoldLinks) {
 				g.setColor(Color.RED);
+				g.drawOval(posX - radius, posY - radius, 2 * radius, 2 * radius);
+			}
+			if (mouseHoldRechts) {
+				g.setColor(Color.BLUE);
 				g.drawOval(posX - radius, posY - radius, 2 * radius, 2 * radius);
 			}
 		}

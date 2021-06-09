@@ -54,6 +54,13 @@ public class TestMain {
 					k.setAusrichtung(k.getAusrichtung() + 0.1);
 				}
 			});
+			k.setEventAktion(EEventTyp.MAUSKLICK_RECHTS, new Aktion() {
+				
+				@Override
+				public void run() {
+					k.setAusrichtung(k.getAusrichtung() - 0.1);
+				}
+			});
 			
 			ov.addKreis(k);
 			

@@ -140,12 +140,12 @@ public class OV_Controller
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		gc.handleMousePress(aktRealMausPos[0], aktRealMausPos[1]);
+		gc.handleMousePress(aktRealMausPos[0], aktRealMausPos[1], e.getButton());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		gc.handleMouseRelease(aktRealMausPos[0], aktRealMausPos[1]);
+		gc.handleMouseRelease(aktRealMausPos[0], aktRealMausPos[1], e.getButton());
 	}
 
 	public int[] getRealVonScreenKoords(int screenX, int screenY) {
@@ -167,11 +167,18 @@ public class OV_Controller
 			List<Button> bs = new ArrayList<>();
 			for (KreisObjekt k : ov.getDirektSichtbareKreise()) {
 				ButtonRound b = new ButtonRound((int) k.getPosX(), (int) k.getPosY(), (int) k.getRadius());
-				b.setAktion(new Aktion() {
+				b.setAktionLinks(new Aktion() {
 					
 					@Override
 					public void run() {
 						k.handleEvent(EEventTyp.MAUSKLICK_LINKS);
+					}
+				});
+				b.setAktionRechts(new Aktion() {
+					
+					@Override
+					public void run() {
+						k.handleEvent(EEventTyp.MAUSKLICK_RECHTS);
 					}
 				});
 				bs.add(b);

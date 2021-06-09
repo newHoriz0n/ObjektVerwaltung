@@ -8,12 +8,18 @@ public abstract class Button {
 	private long lastMove;
 
 	protected boolean mouseOver;
-	protected boolean mouseHold;
+	protected boolean mouseHoldLinks;
+	protected boolean mouseHoldRechts;
 
-	protected Aktion aktion;
+	protected Aktion aktionLinks;
+	protected Aktion aktionRechts;
 
-	public void setAktion(Aktion a) {
-		this.aktion = a;
+	public void setAktionLinks(Aktion a) {
+		this.aktionLinks = a;
+	}
+
+	public void setAktionRechts(Aktion a) {
+		this.aktionRechts = a;
 	}
 
 	public void handleMouseMove(int x, int y) {
@@ -24,25 +30,36 @@ public abstract class Button {
 				return;
 			}
 			mouseOver = false;
-			mouseHold = false;
+			mouseHoldLinks = false;
+			mouseHoldRechts = false;
 		}
 	}
 
-	public void handleMousePress(int x, int y) {
+	public void handleMousePress(int x, int y, int button) {
 		if (checkMouseOver(x, y)) {
-			mouseHold = true;
+			if (button == 1) {
+				mouseHoldLinks = true;
+			}
+			if (button == 3) {
+				mouseHoldRechts = true;
+			}
 			return;
 		}
-		mouseHold = false;
+		mouseHoldLinks = false;
+		mouseHoldRechts = false;
 	}
 
-	public void handleMouseRelease(int x, int y) {
+	public void handleMouseRelease(int x, int y, int button) {
 		if (checkMouseOver(x, y)) {
-			if (aktion != null) {
-				aktion.run();
+			if (button == 1 && aktionLinks != null) {
+				aktionLinks.run();
+				mouseHoldLinks = false;
+			}
+			if (button == 3 && aktionRechts != null) {
+				aktionRechts.run();
+				mouseHoldRechts = false;
 			}
 		}
-		mouseHold = false;
 	}
 
 	public abstract boolean checkMouseOver(int x, int y);
