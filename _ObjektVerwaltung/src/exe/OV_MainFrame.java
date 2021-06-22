@@ -18,6 +18,8 @@ public class OV_MainFrame extends JFrame  {
 		setExtendedState(MAXIMIZED_BOTH);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		System.out.println("Init MainFrame finished");
 	}
 
 	
